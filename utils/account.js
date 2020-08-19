@@ -2,7 +2,7 @@ const { types } = require('@arcblock/mcrypto');
 const { fromRandom, WalletType } = require('@arcblock/forge-wallet');
 const GraphQLClient = require('@arcblock/graphql-client');
 
-export const createAccount= (name) =>{
+exports.createAccount= (name) =>{
     const type = WalletType({
         role: types.RoleType.ROLE_ACCOUNT,
         pk: types.KeyType.ED25519,

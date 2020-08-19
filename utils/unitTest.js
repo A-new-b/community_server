@@ -1,3 +1,3 @@
-import {createAccount} from "./account";
+const account=require('./account');
 
-createAccount("jue");
+account.createAccount('jue');
