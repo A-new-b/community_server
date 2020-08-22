@@ -1,3 +1,13 @@
+const GraphqlClient = require('@arcblock/graphql-client');
 const account=require('./account');
+const assert=require('./asset');
 
-account.createAccount('jue');
+const host = 'http://127.0.0.1:8210';
+const client = new GraphQLClient({ endpoint: `${host}/api` });
+let wallet_name=account.createAccount('jue2',client);
+console.log(wallet_name.toJSON());
+let asserts=assert.addAssert(JSON.parse(wallet_name.toJSON()),client);
+console.log(asserts);
+let info=assert.readAssert(asserts,client);
+console.log(info);
+
