@@ -42,6 +42,3 @@ const type = WalletType({
     pk: types.KeyType.ED25519,
     hash: types.HashType.SHA3,
 });
-
-const wallet_name=fromRandom(type);
-console.log(wallet_name.toJSON());
