@@ -61,6 +61,20 @@
     google-auth-library "^6.0.1"
     lodash "^4.17.15"
 
+"@arcblock/forge-sdk@^1.3.10":
+  version "1.3.10"
+  resolved "https://registry.npm.taobao.org/@arcblock/forge-sdk/download/@arcblock/forge-sdk-1.3.10.tgz#f2b947df03ffd92191f7ea9502763ac9689fa72b"
+  integrity sha1-8rlH3wP/2SGR9+qVAnY6yWifpys=
+  dependencies:
+    "@arcblock/did-util" "^1.3.3"
+    "@arcblock/forge-message" "^1.3.1"
+    "@arcblock/forge-util" "^1.2.13"
+    "@arcblock/forge-wallet" "^1.3.3"
+    "@arcblock/graphql-client" "^1.3.7"
+    "@arcblock/grpc-client" "^1.3.3"
+    debug "^4.1.1"
+    react-app-polyfill "^1.0.1"
+
 "@arcblock/forge-util@^1.2.13":
   version "1.2.13"
   resolved "https://registry.npm.taobao.org/@arcblock/forge-util/download/@arcblock/forge-util-1.2.13.tgz#fab130c6766a6c13c3742c6908f0b994c54f2a87"
@@ -97,6 +111,19 @@
     react-app-polyfill "^1.0.1"
     wolfy87-eventemitter "^5.2.5"
 
+"@arcblock/grpc-client@^1.3.3":
+  version "1.3.3"
+  resolved "https://registry.npm.taobao.org/@arcblock/grpc-client/download/@arcblock/grpc-client-1.3.3.tgz#6d6d392e1d74e2bc4aaf7e6dd812d562e0e090cb"
+  integrity sha1-bW05Lh104rxKr35t2BLVYuDgkMs=
+  dependencies:
+    "@arcblock/client-extension" "^1.3.3"
+    "@arcblock/forge-message" "^1.3.1"
+    "@arcblock/forge-proto" "^1.3.1"
+    "@grpc/grpc-js" "^1.0.5"
+    debug "^4.1.1"
+    google-auth-library "^6.0.1"
+    lodash "^4.17.15"
+
 "@arcblock/mcrypto@^1.2.13":
   version "1.2.13"
   resolved "https://registry.npm.taobao.org/@arcblock/mcrypto/download/@arcblock/mcrypto-1.2.13.tgz#7f8632b3a0129f16c15b4847b1c1e6a2473c148b"
@@ -122,6 +149,14 @@
     graphql "14.6.0"
     lodash.get "^4.4.2"
     lodash.set "^4.3.2"
+
+"@arcblock/tx-util@^1.3.10":
+  version "1.3.10"
+  resolved "https://registry.npm.taobao.org/@arcblock/tx-util/download/@arcblock/tx-util-1.3.10.tgz#b8ab5d49690bc68cd7716197b842e468c156382e"
+  integrity sha1-uKtdSWkLxozXcWGXuELkaMFWOC4=
+  dependencies:
+    "@arcblock/forge-sdk" "^1.3.10"
+    debug "^4.1.1"
 
 "@grpc/grpc-js@^1.0.5":
   version "1.1.3"
