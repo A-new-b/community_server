@@ -1,48 +1,64 @@
 const GraphqlClient = require('@arcblock/graphql-client');
 const { fromRandom } = require('@arcblock/forge-wallet');
-const { verifyTxAsync, verifyAccountAsync, verifyAssetAsync } = require('@arcblock/tx-util');
 
 const endpoint = process.env.FORGE_API_HOST || 'http://127.0.0.1:8210'; // testnet
 
 const client = new GraphqlClient(`${endpoint}/api`);
-
 const sleep = timeout => new Promise(resolve => setTimeout(resolve, timeout));
 
-
 (async () => {
-try {
-    const owner = fromRandom();
-    console.log({ owner: owner.toAddress() });
+    try {
+        const sender = fromRandom();
+        const receiver = fromRandom();
+        console.log({
+            sender: sender.toAddress(),
+            receiver: receiver.toAddress(),
+        });
 
-    // 1. declare owner
-    let hash = await client.declare({ moniker: 'owner3', wallet: owner });
-    console.log('declare.owner.result', hash);
-    console.log('view owner account', `${endpoint}/node/explorer/accounts/${owner.toAddress()}`);
+        // 1. declare sender
+        let hash = await client.declare({ moniker: 'sender', wallet: sender });
+        console.log('view sender account', `${endpoint}/node/explorer/accounts/${sender.toAddress()}`);
+        console.log('view sender tx', `${endpoint}/node/explorer/txs/${hash}`);
 
-    await sleep(3000);
-    // await verifyAccountAsync({ address: owner.toAddress(), chainId: 'China', chainHost: endpoint });
-    // 2. create asset for owner
+        await sleep(3000);
 
-    let assetAddress;
-    [hash, assetAddress] = await client.createAsset({
-        moniker: 'asset',
-        readonly: false, // if we want to update the asset, we should set this to false
-        transferrable: false,
-        data: {
-            typeUrl: 'json',
-            value: {
-                key: 'value',
-                sn: Math.random(),
+        // 2. declare receiver
+        hash = await client.declare({ moniker: 'receiver', wallet: receiver });
+        console.log(
+            'view receiver account',
+            `${endpoint}/node/explorer/accounts/${receiver.toAddress()}`
+        );
+        console.log('view receiver tx', `${endpoint}/node/explorer/txs/${hash}`);
+        await sleep(3000);
+
+        // 3. create asset for sender
+        let assetAddress;
+        // eslint-disable-next-line prefer-const
+        [hash, assetAddress] = await client.createAsset({
+            moniker: 'asset_to_be_transferred',
+            data: {
+                typeUrl: 'json',
+                value: {
+                    value: 'something valuable',
+                    sn: Math.random(),
+                },
             },
-        },
-        wallet: owner,
-    });
-    console.log('view asset state', `${endpoint}/node/explorer/assets/${assetAddress}`);
-    console.log('create asset tx', `${endpoint}/node/explorer/txs/${hash}`);
-} catch (err) {
-    console.error(err);
-    console.log(JSON.stringify(err.errors));
-}
-})();
+            wallet: sender,
+        });
+        console.log('created asset', `${endpoint}/node/explorer/assets/${assetAddress}`);
+        console.log('created asset tx', `${endpoint}/node/explorer/txs/${hash}`);
 
-// wait for asset state consolidates
+        // 4. transfer asset to receiver
+        await sleep(3000);
+        hash = await client.transfer({
+            to: receiver.toAddress(),
+            assets: [assetAddress],
+            memo: 'this is the transfer note',
+            wallet: sender,
+        });
+        console.log('view transfer tx', `${endpoint}/node/explorer/txs/${hash}`);
+    } catch (err) {
+        console.error(err);
+        console.log(JSON.stringify(err.errors));
+    }
+})();
