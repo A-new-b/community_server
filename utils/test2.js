@@ -12,11 +12,14 @@ try {
     console.log({ owner: owner.toAddress() });
 
     // 1. declare owner
-    let hash = await client.declare({ moniker: 'owner2', wallet: owner });
+    let hash = await client.declare({ moniker: 'owner3', wallet: owner });
     console.log('declare.owner.result', hash);
     console.log('view owner account', `${endpoint}/node/explorer/accounts/${owner.toAddress()}`);
 
-    await verifyAccountAsync({ address: owner.toAddress(), chainId: 'China', chainHost: '' });
+    const sleep = timeout => new Promise(resolve => setTimeout(resolve, timeout));
+
+    await sleep(3000);
+    // await verifyAccountAsync({ address: owner.toAddress(), chainId: 'China', chainHost: endpoint });
     // 2. create asset for owner
 
     let assetAddress;
