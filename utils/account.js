@@ -5,6 +5,8 @@ const { fromRandom, WalletType } = require('@arcblock/forge-wallet');
 // const host = 'http://127.0.0.1:8210';
 // const client = new GraphQLClient({ endpoint: `${host}/api` });
 
+const sleep = timeout => new Promise(resolve => setTimeout(resolve, timeout));
+
 exports.createAccount= (name,client) =>{
     const type = WalletType({
         role: types.RoleType.ROLE_ACCOUNT,
@@ -23,18 +25,18 @@ exports.createAccount= (name,client) =>{
         });
     }
 
-    let hash = registerUser(name, wallet_name);
-    console.log('register tx:', hash);
-    // try {
-    //
-    //     } catch (err) {
-    //         if (Array.isArray(err.errors)) {
-    //             console.log(err.errors);
-    //         }
-    //         console.error(err);
-    //     }
-    // };
-    return wallet_name
+    try {
+        let hash = registerUser(name, wallet_name);
+        setTimeout(function(){}, 3000);
+        return wallet_name
+    } catch (err) {
+            if (Array.isArray(err.errors)) {
+                console.log(err.errors);
+                return err.errors;
+            }
+            console.error(err);
+            return err;
+        }
 };
 
 const type = WalletType({

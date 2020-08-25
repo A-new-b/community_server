@@ -3,25 +3,34 @@
 // const client = new GraphqlClient(`${endpoint}/api`);
 
 exports.addAssert=(wallet_name,client)=>{
-
-    let [hash, assetAddress] = client.createAsset({
-        moniker: 'asset',
-        readonly: false, // if we want to update the asset, we should set this to false
-        transferrable: false,
-        data: {
-            typeUrl: 'json',
-            value: {
-                key: 'value',
-                blood_sugar:'1',
-                blood_pressure_s:'1',
-                blood_pressure_d:'1',
+    try{
+        let [hash, assetAddress] = client.createAsset({
+            moniker: 'asset',
+            readonly: false, // if we want to update the asset, we should set this to false
+            transferrable: false,
+            data: {
+                typeUrl: 'json',
+                value: {
+                    key: 'value',
+                    blood_sugar:'1',
+                    blood_pressure_s:'1',
+                    blood_pressure_d:'1',
+                },
             },
-        },
-        wallet: wallet_name,
-    });
-    console.log('view asset state', `/node/explorer/assets/${assetAddress}`);
-    console.log('create asset tx', `/node/explorer/txs/${hash}`);
-    return assetAddress;
+            wallet: wallet_name,
+        });
+        console.log('view asset state', `/node/explorer/assets/${assetAddress}`);
+        console.log('create asset tx', `/node/explorer/txs/${hash}`);
+        setTimeout(function(){}, 3000);
+        return assetAddress;
+    } catch (err) {
+        if (Array.isArray(err.errors)) {
+            console.log(err.errors);
+            return err.errors;
+        }
+        console.error(err);
+        return err;
+    }
 };
 
 exports.readAssert=(assetAddress,client)=>{

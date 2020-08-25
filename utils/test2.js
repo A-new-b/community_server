@@ -6,6 +6,9 @@ const endpoint = process.env.FORGE_API_HOST || 'http://127.0.0.1:8210'; // testn
 
 const client = new GraphqlClient(`${endpoint}/api`);
 
+const sleep = timeout => new Promise(resolve => setTimeout(resolve, timeout));
+
+
 (async () => {
 try {
     const owner = fromRandom();
@@ -15,8 +18,6 @@ try {
     let hash = await client.declare({ moniker: 'owner3', wallet: owner });
     console.log('declare.owner.result', hash);
     console.log('view owner account', `${endpoint}/node/explorer/accounts/${owner.toAddress()}`);
-
-    const sleep = timeout => new Promise(resolve => setTimeout(resolve, timeout));
 
     await sleep(3000);
     // await verifyAccountAsync({ address: owner.toAddress(), chainId: 'China', chainHost: endpoint });
