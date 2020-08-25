@@ -6,13 +6,6 @@ const endpoint = process.env.FORGE_API_HOST || 'http://127.0.0.1:8210'; // testn
 
 const client = new GraphqlClient(`${endpoint}/api`);
 
-
-const type = WalletType({
-    role: types.RoleType.ROLE_ACCOUNT,
-    pk: types.KeyType.ED25519,
-    hash: types.HashType.SHA3,
-});//钱包
-
 exports.createAccount= (name,client) =>{
     const type = WalletType({
         role: types.RoleType.ROLE_ACCOUNT,
