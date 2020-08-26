@@ -1,6 +1,7 @@
 let express = require('express');
 let router = express.Router();
 let sql=require('../Dao/basic_method');
+let block_method=require('../utils/asset');
 const jwt = require('jsonwebtoken');
 const { secretKey } = require('../constant/constant');
 let jwtAuth=require('./jwt');
@@ -55,6 +56,22 @@ router.post('/login', function(req, res, next) {
     sql.selectUser(body.username,body.password,login_callback);
   })();
 });//登录api
-router.post('/createAccount',function (req,res,next) {});//创建账户api
+router.post('/createAccount',function (req,res,next) {
+    (async ()=>{
+        let body=req.body;
+        console.log(req.body);
+        try{
+
+        }catch (e) {
+            console.log(e);
+            await res.status(500).json(
+                {
+                    code:0,
+                    msg:'服务器错误'
+                }
+            )
+        }
+    })();
+});//创建账户api
 router.post('/information',);//获取列表信息api
 module.exports = router;
