@@ -1,12 +1,15 @@
 const { types } = require('@arcblock/mcrypto');
 const { fromRandom, WalletType } = require('@arcblock/forge-wallet');
 const GraphqlClient = require('@arcblock/graphql-client');
+const { verifyTxAsync, verifyAccountAsync, verifyAssetAsync } = require('@arcblock/tx-util');
+
 
 const endpoint = process.env.FORGE_API_HOST || 'http://127.0.0.1:8210'; // testnet
 
 const client = new GraphqlClient(`${endpoint}/api`);
 
-exports.createAccount= (name,client) =>{
+
+exports.createAccount= async (name,client) =>{
     const type = WalletType({
         role: types.RoleType.ROLE_ACCOUNT,
         pk: types.KeyType.ED25519,
@@ -14,8 +17,6 @@ exports.createAccount= (name,client) =>{
     });
 
     const wallet_name=fromRandom(type);
-
-
 
     function registerUser(userName, userWallet) {
         return client.declare({
@@ -26,8 +27,8 @@ exports.createAccount= (name,client) =>{
 
     try {
         let hash = registerUser(name, wallet_name);
-        setTimeout(function(){}, 3000);
-        return wallet_name
+        console.log(`account ${hash}`);
+        return {wallet_name,hash};
     } catch (err) {
         if (Array.isArray(err.errors)) {
             console.log(err.errors);
@@ -39,8 +40,10 @@ exports.createAccount= (name,client) =>{
 };
 
 
-exports.addAssert=(wallet_name)=>{
+exports.addAssert=async (wallet_name)=>{
     try{
+        const info = await client.getChainInfo();
+        await verifyAccountAsync({ address: wallet_name.toAddress(), chainId: info.info.id, chainHost: `${endpoint}/api` });
         let [hash, assetAddress] = client.createAsset({
             moniker: 'asset',
             readonly: false, // if we want to update the asset, we should set this to false
@@ -58,8 +61,7 @@ exports.addAssert=(wallet_name)=>{
         });
         console.log('view asset state', `/node/explorer/assets/${assetAddress}`);
         console.log('create asset tx', `/node/explorer/txs/${hash}`);
-        setTimeout(function(){}, 3000);
-        return assetAddress;
+        return {assetAddress,hash};
     } catch (err) {
         if (Array.isArray(err.errors)) {
             console.log(err.errors);
@@ -70,7 +72,9 @@ exports.addAssert=(wallet_name)=>{
     }
 };
 
-exports.readAssert=(assetAddress)=>{
+exports.readAssert=async (assetAddress,hash)=>{
+    const info = await client.getChainInfo();
+    await verifyTxAsync({ hash, chainId: info.info.id, chainHost: `${endpoint}/api` });
     const { state } = client.getAssetState({ address: assetAddress });
     console.log('asset state', state);
 };
