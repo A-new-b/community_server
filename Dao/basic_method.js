@@ -16,13 +16,13 @@ exports.insertUser=(username,password,device_id,account)=>{
     });
 };
 
-exports.selectUser=(username,password)=>{
+exports.selectUser=(username,password,callback)=>{
     pool.getConnection(function(err, connection){
-        connection.query( "select * from users where user_name = ? and user_password= ?",[username,password],function(err, rows){
+        connection.query( "select * from users where user_name = ? and user_password= ?",[username,password],function(err,vals,fields){
             if(err) {
-                throw err;
+                callback(err,null)
             }else{
-                console.log( rows[0] );
+                callback(vals[0],fields)
             }
         });
         connection.release();
@@ -54,3 +54,4 @@ exports.selectAssert=(device_id)=>{
         connection.release();
     });
 };
+

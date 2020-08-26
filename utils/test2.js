@@ -20,7 +20,22 @@ const client = new GraphqlClient(`${endpoint}/api`);
 
         await verifyAccountAsync({ address: owner.toAddress(), chainId: res.info.id, chainHost: `${endpoint}/api` });
 
-        console.log("yes");
+        let assetAddress;
+        [hash, assetAddress] = await client.createAsset({
+            moniker: 'asset',
+            readonly: false, // if we want to update the asset, we should set this to false
+            transferrable: false,
+            data: {
+                typeUrl: 'json',
+                value: {
+                    key: 'value',
+                    sn: Math.random(),
+                },
+            },
+            wallet: owner,
+        });
+        console.log('view asset state', `${endpoint}/node/explorer/assets/${assetAddress}`);
+        console.log('create asset tx', `${endpoint}/node/explorer/txs/${hash}`);
     }catch (e) {
         console.log(e)
     }

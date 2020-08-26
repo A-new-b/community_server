@@ -5,6 +5,8 @@
 /.idea
 /.pnp
 .pnp.js
+/conf
+/constant
 
 # testing
 /coverage
