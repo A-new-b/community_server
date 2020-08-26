@@ -56,12 +56,41 @@ router.post('/login', function(req, res, next) {
     sql.selectUser(body.username,body.password,login_callback);
   })();
 });//登录api
-router.post('/createAccount',function (req,res,next) {
+router.post('/createAsset',function (req,res,next) {
     (async ()=>{
-        let body=req.body;
+        let info=req.body.info;
+        let token = req.user;
         console.log(req.body);
+        const asset_callback=(result,resolve)=>{
+            if (resolve===null){
+                res.status(500).json(
+                    {
+                        code:0,
+                        msg:'databases error'
+                    }
+                )
+            } else {
+                res.json(
+                    {
+                        code:1,
+                        msg:'创建成功',
+                    }
+                )
+            }
+        };
         try{
-
+            if(token!==undefined)
+            {
+                let account=JSON.parse(token.account);
+                const address=await block_method.addAssert(info,account);
+                sql.insertAssert(token.device_id,address,asset_callback);
+            }
+            else {
+                await res.json({
+                    code:1,
+                    msg:'该功能暂不开放'
+                })
+            }
         }catch (e) {
             console.log(e);
             await res.status(500).json(

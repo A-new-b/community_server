@@ -29,13 +29,13 @@ exports.selectUser=(username,password,callback)=>{
     });
 };
 
-exports.insertAssert=(device_id,address)=>{
+exports.insertAssert=(device_id,address,callback)=>{
     pool.getConnection(function(err, connection){
-        connection.query( "insert into assert(device_id,address) values(?,?)",[device_id,address],function(err, rows){
+        connection.query( "insert into assert(device_id,address) values(?,?)",[device_id,address],function(err,vals,fields){
             if(err) {
-                throw err;
+                callback(err,null);
             }else{
-                console.log( rows );
+                callback(vals[0],fields);
             }
         });
         connection.release();

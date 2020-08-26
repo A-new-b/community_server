@@ -40,7 +40,7 @@ exports.createAccount= async (name) =>{
 };
 
 
-exports.addAssert=async (wallet_name)=>{
+exports.addAssert=async (info,wallet_name)=>{
     try{
         const info = await client.getChainInfo();
         await verifyAccountAsync({ address: wallet_name.toAddress(), chainId: info.info.id, chainHost: `${endpoint}/api` });
@@ -51,9 +51,10 @@ exports.addAssert=async (wallet_name)=>{
             data: {
                 typeUrl: 'json',
                 value: {
-                    blood_sugar:'1',
-                    blood_pressure_s:'1',
-                    blood_pressure_d:'1',
+                    blood_sugar:info.blood_sugar,
+                    blood_pressure_s:info.blood_pressure_s,
+                    blood_pressure_d:info.blood_pressure_d,
+                    time:info.time
                 },
             },
             wallet: wallet_name,

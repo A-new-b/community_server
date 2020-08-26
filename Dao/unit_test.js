@@ -2,7 +2,7 @@ const module_S=require("./basic_method");
 
 
 module_S.selectUser('xiaoming','123',function (resolve,result) {
-console.log(resolve);
+console.log(resolve.user_name);
 console.log(result);
 });
 
