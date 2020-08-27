@@ -71,6 +71,7 @@ router.post('/createAsset',function (req,res,next) {
         // console.log(req.body);
         const asset_callback=(result,resolve)=>{
             if (resolve===null){
+                console.log(result);
                 res.status(500).json(
                     {
                         code:0,
@@ -88,16 +89,14 @@ router.post('/createAsset',function (req,res,next) {
         };
 
         try{
-            console.log(token);
             if(token!==undefined)
             {
-                console.log('1');
                 const select_callback=async (result,resolve)=>{
                     if (resolve!==null &&result!==undefined)
                     {
-                        let account=JSON.parse(result.account);
-                        const address=await block_method.addAssert(info,account);
-                        sql.insertAssert(token.device_id,address,asset_callback);
+                        console.log(info.blood_sugar);
+                        const address=await block_method.addAssert(info,result.account);
+                        sql.insertAssert(token.id,address.assetAddress,asset_callback);
                     }
                     else {
                         await res.status(500).json(
@@ -127,5 +126,64 @@ router.post('/createAsset',function (req,res,next) {
         }
     })();
 });//创建账户api
-router.post('/information',);//获取列表信息api
+router.get('/information',function (req,res,next) {
+    (async ()=>{
+        let token = req.user;
+        // console.log(req.body);
+        const asset_callback=(result,resolve)=>{
+            if (resolve===null){
+                console.log(result);
+                res.status(500).json(
+                    {
+                        code:0,
+                        msg:'databases error'
+                    }
+                )
+            } else {
+                res.json(
+                    {
+                        code:1,
+                        msg:'创建成功',
+                    }
+                )
+            }
+        };
+
+        try{
+            if(token!==undefined)
+            {
+                const select_callback=async (result,resolve)=>{
+                    if (resolve!==null &&result!==undefined)
+                    {
+                        const address=await block_method.addAssert(info,result.account);
+                        sql.insertAssert(token.id,address.assetAddress,asset_callback);
+                    }
+                    else {
+                        await res.status(500).json(
+                            {
+                                code:0,
+                                msg:'服务器错误'
+                            }
+                        )
+                    }
+                };
+                sql.selectUserToken(token.id,select_callback);
+            }
+            else {
+                await res.json({
+                    code:1,
+                    msg:'该功能暂不开放'
+                })
+            }
+        }catch (e) {
+            console.log(e);
+            await res.status(500).json(
+                {
+                    code:0,
+                    msg:'服务器错误'
+                }
+            )
+        }
+    })();
+});//获取列表信息api
 module.exports = router;
