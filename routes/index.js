@@ -150,8 +150,11 @@ router.get('/information',function (req,res,next) {
                 let list=[];
                 for(let i=0;i<result.length;i++)
                 {
-                    let item = await block_method.readAssert(result[i].address,result[i].hash)
-                    list.push(item)
+                    let item = await block_method.readAssert(result[i].address,result[i].hash);
+                    if (item.data.value!==undefined)
+                    {
+                        list.push(item)
+                    }
                 }
                 await res.json(
                     {

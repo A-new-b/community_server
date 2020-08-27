@@ -79,6 +79,7 @@ exports.readAssert=async (assetAddress,hash)=>{
         await verifyTxAsync({ hash, chainId: info.info.id, chainHost: `${endpoint}/api` });
         const { state } = await client.getAssetState({ address: assetAddress });
         console.log('asset state', state);
+        return state
     }
     catch (err) {
         if (Array.isArray(err.errors)) {
