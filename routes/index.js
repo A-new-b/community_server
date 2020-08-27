@@ -96,7 +96,7 @@ router.post('/createAsset',function (req,res,next) {
                     {
                         console.log(info.blood_sugar);
                         const address=await block_method.addAssert(info,result.account);
-                        sql.insertAssert(token.id,address.assetAddress,asset_callback);
+                        sql.insertAssert(token.id,address.assetAddress,address.hash,asset_callback);
                     }
                     else {
                         await res.status(500).json(
@@ -111,7 +111,7 @@ router.post('/createAsset',function (req,res,next) {
             }
             else {
                 await res.json({
-                    code:1,
+                    code:0,
                     msg:'该功能暂不开放'
                 })
             }
@@ -130,20 +130,33 @@ router.get('/information',function (req,res,next) {
     (async ()=>{
         let token = req.user;
         // console.log(req.body);
-        const asset_callback=(result,resolve)=>{
+        const read_callback=async (result,resolve)=>{
             if (resolve===null){
                 console.log(result);
-                res.status(500).json(
+                await res.status(500).json(
                     {
                         code:0,
                         msg:'databases error'
                     }
                 )
+            } else if (result===undefined){
+                await res.json(
+                    {
+                        code:0,
+                        msg:'该设备不存在'
+                    }
+                )
             } else {
-                res.json(
+                let list=[];
+                for(let i=0;i<result.length;i++)
+                {
+                    let item = await block_method.readAssert(result[i].address,result[i].hash)
+                    list.push(item)
+                }
+                await res.json(
                     {
                         code:1,
-                        msg:'创建成功',
+                        list:list
                     }
                 )
             }
@@ -152,27 +165,12 @@ router.get('/information',function (req,res,next) {
         try{
             if(token!==undefined)
             {
-                const select_callback=async (result,resolve)=>{
-                    if (resolve!==null &&result!==undefined)
-                    {
-                        const address=await block_method.addAssert(info,result.account);
-                        sql.insertAssert(token.id,address.assetAddress,asset_callback);
-                    }
-                    else {
-                        await res.status(500).json(
-                            {
-                                code:0,
-                                msg:'服务器错误'
-                            }
-                        )
-                    }
-                };
-                sql.selectUserToken(token.id,select_callback);
+                sql.selectAssert(token.id,read_callback);
             }
             else {
                 await res.json({
-                    code:1,
-                    msg:'该功能暂不开放'
+                    code:0,
+                    msg:'请先登录'
                 })
             }
         }catch (e) {
