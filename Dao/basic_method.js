@@ -29,6 +29,19 @@ exports.selectUser=(username,password,callback)=>{
     });
 };
 
+exports.selectUserToken=(device_id,callback)=>{
+    pool.getConnection(function(err, connection){
+        connection.query( "select * from users where device_id = ?",[device_id],function(err,vals,fields){
+            if(err) {
+                callback(err,null)
+            }else{
+                callback(vals[0],fields)
+            }
+        });
+        connection.release();
+    });
+};
+
 exports.insertAssert=(device_id,address,callback)=>{
     pool.getConnection(function(err, connection){
         connection.query( "insert into assert(device_id,address) values(?,?)",[device_id,address],function(err,vals,fields){

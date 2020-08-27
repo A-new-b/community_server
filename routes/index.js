@@ -41,7 +41,8 @@ router.post('/login', function(req, res, next) {
         )
       }
       else {
-        let token = jwt.sign({result}, secretKey, {
+          let id=result.device_id;
+        let token = jwt.sign({id}, secretKey, {
           expiresIn : 60 * 60 * 24 // 授权时效24小时
         });
         res.json(
@@ -56,6 +57,13 @@ router.post('/login', function(req, res, next) {
     sql.selectUser(body.username,body.password,login_callback);
   })();
 });//登录api
+// router.post('/test', function(req, res, next) {
+//     (async ()=>{
+//         console.log(req.user)
+//         res.send(JSON.stringify(req.user))
+//     })()
+// });测试api
+
 router.post('/createAsset',function (req,res,next) {
     (async ()=>{
         let info=req.body.info;
@@ -78,12 +86,27 @@ router.post('/createAsset',function (req,res,next) {
                 )
             }
         };
+
         try{
             if(token!==undefined)
             {
-                let account=JSON.parse(token.account);
-                const address=await block_method.addAssert(info,account);
-                sql.insertAssert(token.device_id,address,asset_callback);
+                const select_callback=async (result,resolve)=>{
+                    if (resolve!==null &&result!==undefined)
+                    {
+                        let account=JSON.parse(result.account);
+                        const address=await block_method.addAssert(info,account);
+                        sql.insertAssert(token.device_id,address,asset_callback);
+                    }
+                    else {
+                        await res.status(500).json(
+                            {
+                                code:0,
+                                msg:'服务器错误'
+                            }
+                        )
+                    }
+                };
+                sql.selectUserToken(token.device_id,select_callback());
             }
             else {
                 await res.json({
