@@ -153,7 +153,7 @@ router.get('/information',function (req,res,next) {
                     let item = await block_method.readAssert(result[i].address,result[i].hash);
                     if (item.data.value!==undefined)
                     {
-                        list.push(item)
+                        list.push(item.data.value)
                     }
                 }
                 await res.json(
