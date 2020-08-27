@@ -1,5 +1,5 @@
 const { types } = require('@arcblock/mcrypto');
-const { fromRandom, WalletType } = require('@arcblock/forge-wallet');
+const { fromRandom, WalletType,fromJSON } = require('@arcblock/forge-wallet');
 const GraphqlClient = require('@arcblock/graphql-client');
 const { verifyTxAsync, verifyAccountAsync, verifyAssetAsync } = require('@arcblock/tx-util');
 
@@ -40,8 +40,9 @@ exports.createAccount= async (name) =>{
 };
 
 
-exports.addAssert=async (info,wallet_name)=>{
+exports.addAssert=async (info,name_json)=>{
     try{
+        let wallet_name = fromJSON(JSON.parse(name_json));
         const info = await client.getChainInfo();
         await verifyAccountAsync({ address: wallet_name.toAddress(), chainId: info.info.id, chainHost: `${endpoint}/api` });
         let [hash, assetAddress] = await client.createAsset({

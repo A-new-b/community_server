@@ -66,9 +66,9 @@ router.post('/login', function(req, res, next) {
 
 router.post('/createAsset',function (req,res,next) {
     (async ()=>{
-        let info=req.body.info;
+        let info=req.body;
         let token = req.user;
-        console.log(req.body);
+        // console.log(req.body);
         const asset_callback=(result,resolve)=>{
             if (resolve===null){
                 res.status(500).json(
@@ -88,8 +88,10 @@ router.post('/createAsset',function (req,res,next) {
         };
 
         try{
+            console.log(token);
             if(token!==undefined)
             {
+                console.log('1');
                 const select_callback=async (result,resolve)=>{
                     if (resolve!==null &&result!==undefined)
                     {
@@ -106,7 +108,7 @@ router.post('/createAsset',function (req,res,next) {
                         )
                     }
                 };
-                sql.selectUserToken(token.device_id,select_callback());
+                sql.selectUserToken(token.id,select_callback);
             }
             else {
                 await res.json({
