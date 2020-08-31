@@ -14,8 +14,8 @@ const result=module_S.selectUserToken('123',function (resolve,result) {
     }
 );
 
-// const insert_assert_result=module_S.insertAssert('123','money');
+// const insert_asset_result=module_S.insertAsset('123','money');
 
-// const select_assert_result=module_S.selectAssert('123');
+// const select_asset_result=module_S.selectAsset('123');
 
 console.log(result);
