@@ -211,7 +211,8 @@ router.post('/upload',function (req,res,next) {
                 {
                     // console.log(info.blood_sugar);
                     const address=await block_method.addAssert(info,result.account);
-                    sql.insertAssert(result.id,address.assetAddress,address.hash,upload_callback);
+                    console.log(result);
+                    sql.insertAssert(result.device_id,address.assetAddress,address.hash,upload_callback);
                 }
                 else {
                     await res.status(500).json(
