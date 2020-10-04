@@ -57,12 +57,6 @@ router.post('/login', function(req, res, next) {
     sql.selectUser(body.username,body.password,login_callback);
   })();
 });//登录api
-// router.post('/test', function(req, res, next) {
-//     (async ()=>{
-//         console.log(req.user)
-//         res.send(JSON.stringify(req.user))
-//     })()
-// });测试api
 
 router.post('/createAsset',function (req,res,next) {
     (async ()=>{
@@ -187,4 +181,52 @@ router.get('/information',function (req,res,next) {
         }
     })();
 });//获取列表信息api
+router.post('/upload',function (req,res,next) {
+    (
+        async ()=>{
+            let username=req.body.username;
+            let password=req.body.password;
+            let info = req.body.info;
+
+            const upload_callback=(result,resolve)=>{
+                if (resolve===null){
+                    console.log(result);
+                    res.status(500).json(
+                        {
+                            code:0,
+                            msg:'databases error'
+                        }
+                    )
+                } else {
+                    res.json(
+                        {
+                            code:1,
+                            msg:'创建成功',
+                        }
+                    )
+                }
+            };
+            const select_upload_callback=async (result,resolve)=>{
+                if (resolve!==null &&result!==undefined)
+                {
+                    // console.log(info.blood_sugar);
+                    const address=await block_method.addAssert(info,result.account);
+                    sql.insertAssert(result.id,address.assetAddress,address.hash,upload_callback);
+                }
+                else {
+                    await res.status(500).json(
+                        {
+                            code:0,
+                            msg:'服务器错误'
+                        }
+                    )
+                }
+            };
+            sql.selectUser(username,password,select_upload_callback);
+
+
+
+        }
+    )();
+})
 module.exports = router;
