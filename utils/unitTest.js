@@ -1,7 +1,7 @@
-const assert=require('./asset');
+const asset=require('./asset');
 
 (async ()=>{
-    // let wallet_name=await assert.createAccount('jue7');
+    // let wallet_name=await asset.createAccount('jue7');
     // let name_json=wallet_name.toJSON();
     // console.log(typeof(wallet_name.toJSON()));
     // console.log(JSON.stringify(name_json));
@@ -13,11 +13,11 @@ const assert=require('./asset');
     //     "blood_pressure_d":"1",
     //     "time":"1"
     // };
-    // let {assetAddress,hash}=await assert.addAssert(info_s,test);
+    // let {assetAddress,hash}=await asset.addAsset(info_s,test);
     // console.log(assetAddress);
     let assetAddress='zjdeiHBusNMsqQtDQxc1HvnDZg3xFY4S434F';
     let hash ='16F89348E758BC369EE2B05C415B46314842ABA87AFE3F56C063C3EE637A274E';
-    let info=await assert.readAssert(assetAddress,hash);
+    let info=await asset.readAsset(assetAddress,hash);
     console.log(info);
 })();
 

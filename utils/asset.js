@@ -40,7 +40,7 @@ exports.createAccount= async (name) =>{
 };
 
 
-exports.addAssert=async (info_s,name_json)=>{
+exports.addAsset=async (info_s,name_json)=>{
     try{
         let wallet_name = fromJSON(JSON.parse(name_json));
         const info = await client.getChainInfo();
@@ -73,7 +73,7 @@ exports.addAssert=async (info_s,name_json)=>{
     }
 };
 
-exports.readAssert=async (assetAddress,hash)=>{
+exports.readAsset=async (assetAddress,hash)=>{
     try{
         const info = await client.getChainInfo();
         await verifyTxAsync({ hash, chainId: info.info.id, chainHost: `${endpoint}/api` });
@@ -92,7 +92,7 @@ exports.readAssert=async (assetAddress,hash)=>{
     
 };
 
-exports.updateAssert=(wallet_name,assetAddress,info)=>{
+exports.updateAsset=(wallet_name,assetAddress,info)=>{
     let hash =  client.updateAsset({
         address: assetAddress,
         moniker: 'asset_updated',

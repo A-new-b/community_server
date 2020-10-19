@@ -42,9 +42,9 @@ exports.selectUserToken=(device_id,callback)=>{
     });
 };
 
-exports.insertAssert=(device_id,address,hash,callback)=>{
+exports.insertAsset=(device_id,address,hash,callback)=>{
     pool.getConnection(function(err, connection){
-        connection.query( "insert into assert(device_id,address,hash) values(?,?,?)",[device_id,address,hash],function(err,vals,fields){
+        connection.query( "insert into asset(device_id,address,hash) values(?,?,?)",[device_id,address,hash],function(err,vals,fields){
             if(err) {
                 callback(err,null);
             }else{
@@ -55,9 +55,9 @@ exports.insertAssert=(device_id,address,hash,callback)=>{
     });
 };
 
-exports.selectAssert=(device_id,callback)=>{
+exports.selectAsset=(device_id,callback)=>{
     pool.getConnection(function(err, connection){
-        connection.query( "select * from assert where device_id= ?",[device_id],function(err, vals,fields){
+        connection.query( "select * from asset where device_id= ?",[device_id],function(err, vals,fields){
             if(err) {
                 console.log(err);
                 callback(err,null)
